@@ -103,26 +103,40 @@ module.exports = (_ => {
 				
 				this.defaults = {
 					general: {
-						useCrown:			{value: true,	description: "Uses the Crown Icon instead of the Bot Tag Style"},
+						useCrown:			{value: false,	description: "Uses the Crown Icon instead of the Bot Tag Style"},
 						useRoleColor:		{value: true, 	description: "Uses the Role Color instead of the default Blurple"},
 						useBlackFont:		{value: false,	description: "Uses black Font instead of darkening the Role Color on bright Colors"},
-						ignoreBots:			{value: false,	description: "Doesn't add the Owner/Admin/Management Tag for Bots"},
+						ignoreBots:			{value: false,	description: "Doesn't add the Owner/Admin/Mod Tag for Bots"},
 						ignoreMyself:		{value: false,	description: "Doesn't add the Owner/Admin/Management Tag for yourself"}
 					},
 					tagTypes: {
-						owners:				{value: true, 	description: "Server Owner Tag"},
-						groupOwners:		{value: true, 	description: "Group Owner Tag"},
-						threadCreators:		{value: true, 	description: "Thread Creator Tag"},
-						forumCreators:		{value: true, 	description: "Forum Creator Tag"},
-						admins:				{value: true, 	description: "Admin Tag (Admin Permissions)"},
-						managementG:		{value: true, 	description: "Management Tag (Server Management)"},
-						managementC:		{value: true, 	description: "Management Tag (Channel Management)"},
-						managementT:		{value: true, 	description: "Management Tag (Threads Management)"},
-						managementE:		{value: true, 	description: "Management Tag (Events Management)"},
-						managementR:		{value: true, 	description: "Management Tag (Role Management)"},
-						managementU:		{value: true, 	description: "Management Tag (User Management 'Kick/Ban')"},
-						managementV:		{value: true, 	description: "Management Tag (Voice Management 'Mute/Deafen/Move')"},
-						managementM:		{value: true, 	description: "Management Tag (Message Management)"}
+						owners:						{value: true, 	description: "Server Owner Tag"},
+						groupOwners:				{value: true, 	description: "Group Owner Tag"},
+						threadCreators:				{value: true, 	description: "Thread Creator Tag"},
+						admins:						{value: true, 	description: "Admin Tag (Admin Permissions)"},
+						/* Server Permissions */
+						managementChannels:			{value: true, 	description: "Mod Tag (Channels Management)"},
+						managementRoles:			{value: true, 	description: "Mod Tag (Roles Management)"},
+						managementEmojisStickers:	{value: true, 	description: "Mod Tag (Emojis & Stickers Management)"},
+						managementViewAuditLog:		{value: true, 	description: "Mod Tag (View Audit Log)"},
+						managementInsights:			{value: true, 	description: "Mod Tag (View Server Insights)"},
+						managementWebhooks:			{value: true, 	description: "Mod Tag (Webhooks Management)"},
+						managementServer:			{value: true, 	description: "Mod Tag (Server Management)"},
+						/* Membership Permissions */
+						managementModerate:			{value: true, 	description: "Mod Tag (Moderate Members)"},
+						managementNicknames:		{value: true, 	description: "Mod Tag (Nicknames Management)"},
+						managementKick:				{value: true, 	description: "Mod Tag (Kick Users)"},
+						managementBan:				{value: true, 	description: "Mod Tag (Ban Users)"},
+						/* Text Channel Permissions */
+						managementMention:			{value: true, 	description: "Mod Tag (Mention @everyone)"},
+						managementMessages:			{value: true, 	description: "Mod Tag (Messages Management)"},
+						managementThreads:			{value: true, 	description: "Mod Tag (Threads Management)"},
+						/* VC Permissions */
+						managementMute:				{value: true, 	description: "Mod Tag (Mute Members)"},
+						managementDeafen:			{value: true, 	description: "Mod Tag (Deafen Members)"},
+						managementMove:				{value: true, 	description: "Mod Tag (Move Members)"},
+						/* Events Permissions */
+						managementEvents:			{value: true, 	description: "Mod Tag (Events Management)"}
 					},
 					tagPlaces: {
 						chat:				{value: true, 	description: "Messages"},
@@ -137,7 +151,7 @@ module.exports = (_ => {
 						forumCreator:		{value: "",		placeholder: "Creator", 	description: "Forum Creator Tags"},
 						threadCreator:		{value: "",		placeholder: "Creator", 	description: "Thread Creator Tags"},
 						admin:				{value: "",		placeholder: "Admin", 		description: "Admin Tags"},
-						management:			{value: "",		placeholder: "Management", 	description: "Management Tags"}
+						management:			{value: "",		placeholder: "Mod", 	description: "Mod Tags"}
 					}
 				};
 			
@@ -169,8 +183,11 @@ module.exports = (_ => {
 						margin-left: 0;
 						margin-right: 4px;
 					}
-					${BDFDB.dotCNS.voiceuser + BDFDB.dotCN.memberownericon}:last-child {
-						margin-right: 4px;
+					.tooltipContent-Nejnvh {
+						white-space: break-spaces !important
+					}
+					.headerText-1-WmDq .botText-1fD6Qk {
+						font-family: var(--font-primary)
 					}
 				`;
 			}
@@ -395,16 +412,63 @@ module.exports = (_ => {
 			}
 			
 			getManagementLabel (user) {
+				const ServerPerms = (
+					this.settings.tagTypes.managementChannels && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) ||
+					this.settings.tagTypes.managementRoles && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) ||
+					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) ||
+					this.settings.tagTypes.managementViewAuditLog && BDFDB.UserUtils.can("VIEW_AUDIT_LOG", user.id) ||
+					this.settings.tagTypes.managementInsights && BDFDB.UserUtils.can("VIEW_GUILD_ANALYTICS", user.id) ||
+					this.settings.tagTypes.managementWebhooks && BDFDB.UserUtils.can("MANAGE_WEBHOOKS", user.id) ||
+					this.settings.tagTypes.managementServer && BDFDB.UserUtils.can("MANAGE_GUILD", user.id)
+				)
+				const MembershipPerms = (
+					this.settings.tagTypes.managementModerate && BDFDB.UserUtils.can("MODERATE_MEMBERS", user.id) ||
+					this.settings.tagTypes.managementNicknames && BDFDB.UserUtils.can("MANAGE_NICKNAMES", user.id) ||
+					this.settings.tagTypes.managementKick && BDFDB.UserUtils.can("KICK_MEMBERS", user.id) ||
+					this.settings.tagTypes.managementBan && BDFDB.UserUtils.can("BAN_MEMBERS", user.id)
+				)
+				const TextPerms = (
+					this.settings.tagTypes.managementMention && BDFDB.UserUtils.can("MENTION_EVERYONE", user.id) ||
+					this.settings.tagTypes.managementMessages && BDFDB.UserUtils.can("MANAGE_MESSAGES", user.id) ||
+					this.settings.tagTypes.managementThreads && BDFDB.UserUtils.can("MANAGE_THREADS", user.id)
+				)
+				const VCPerms = (
+					this.settings.tagTypes.managementMute && BDFDB.UserUtils.can("MUTE_MEMBERS", user.id) ||
+					this.settings.tagTypes.managementDeafen && BDFDB.UserUtils.can("DEAFEN_MEMBERS", user.id) ||
+					this.settings.tagTypes.managementMove && BDFDB.UserUtils.can("MOVE_MEMBERS", user.id)
+				)
+				const EventPerms = (
+					this.settings.tagTypes.managementEvents && BDFDB.UserUtils.can("MANAGE_EVENTS", user.id)
+				)
 				return [
-					this.settings.tagTypes.managementG && BDFDB.UserUtils.can("MANAGE_GUILD", user.id) && BDFDB.LanguageUtils.LibraryStrings.server,
-					this.settings.tagTypes.managementC && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) && BDFDB.LanguageUtils.LanguageStrings.CHANNELS,
-					this.settings.tagTypes.managementT && BDFDB.UserUtils.can("MANAGE_THREADS", user.id) && BDFDB.LanguageUtils.LanguageStrings.THREADS,
-					this.settings.tagTypes.managementE && BDFDB.UserUtils.can("MANAGE_EVENTS", user.id) && BDFDB.LanguageUtils.LanguageStrings.GUILD_EVENTS,
-					this.settings.tagTypes.managementR && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) && BDFDB.LanguageUtils.LanguageStrings.ROLES,
-					this.settings.tagTypes.managementU && (BDFDB.UserUtils.can("BAN_MEMBERS", user.id) || BDFDB.UserUtils.can("KICK_MEMBERS", user.id)) && BDFDB.LanguageUtils.LanguageStrings.MEMBERS,
-					this.settings.tagTypes.managementV && (BDFDB.UserUtils.can("MUTE_MEMBERS", user.id) || BDFDB.UserUtils.can("DEAFEN_MEMBERS", user.id) || BDFDB.UserUtils.can("MOVE_MEMBERS", user.id)) && BDFDB.LanguageUtils.LanguageStrings.VOICE_AND_VIDEO,
-					this.settings.tagTypes.managementM && BDFDB.UserUtils.can("MANAGE_MESSAGES", user.id) && BDFDB.LanguageUtils.LanguageStrings.MESSAGES
-				].filter(n => n).join(", ");
+					/* Server Permissions */
+					this.settings.tagTypes.managementChannels && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) && "Manage Channels",
+					this.settings.tagTypes.managementRoles && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) && "Manage Roles",
+					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) && "Manage Emojis",
+					this.settings.tagTypes.managementViewAuditLog && BDFDB.UserUtils.can("VIEW_AUDIT_LOG", user.id) && "View Audit Log",
+					this.settings.tagTypes.managementInsights && BDFDB.UserUtils.can("VIEW_GUILD_ANALYTICS", user.id) && "View Server Insights",
+					this.settings.tagTypes.managementWebhooks && BDFDB.UserUtils.can("MANAGE_WEBHOOKS", user.id) && "Manage Webhooks",
+					this.settings.tagTypes.managementServer && BDFDB.UserUtils.can("MANAGE_GUILD", user.id) && "Manage Server",
+					/* Membership Permissions */
+					ServerPerms && MembershipPerms && "──────────────",
+					this.settings.tagTypes.managementModerate && BDFDB.UserUtils.can("MODERATE_MEMBERS", user.id) && "Moderate Members",
+					this.settings.tagTypes.managementNicknames && BDFDB.UserUtils.can("MANAGE_NICKNAMES", user.id) && "Manage Nicknames",
+					this.settings.tagTypes.managementKick && BDFDB.UserUtils.can("KICK_MEMBERS", user.id) && "Kick Members",
+					this.settings.tagTypes.managementBan && BDFDB.UserUtils.can("BAN_MEMBERS", user.id) && "Ban Members",
+					/* Text Channel Permissions */
+					(ServerPerms || MembershipPerms) && TextPerms && "──────────────",
+					this.settings.tagTypes.managementMention && BDFDB.UserUtils.can("MENTION_EVERYONE", user.id) && "Mention @everyone",
+					this.settings.tagTypes.managementMessages && BDFDB.UserUtils.can("MANAGE_MESSAGES", user.id) && "Manage Messages",
+					this.settings.tagTypes.managementThreads && BDFDB.UserUtils.can("MANAGE_THREADS", user.id) && "Manage Threads",
+					/* VC Permissions */
+					(ServerPerms || MembershipPerms || TextPerms) && VCPerms && "──────────────",
+					this.settings.tagTypes.managementMute && BDFDB.UserUtils.can("MUTE_MEMBERS", user.id) && "Mute Members",
+					this.settings.tagTypes.managementDeafen && BDFDB.UserUtils.can("DEAFEN_MEMBERS", user.id) && "Deafen Members",
+					this.settings.tagTypes.managementMove && BDFDB.UserUtils.can("MOVE_MEMBERS", user.id) && "Move Members",
+					/* Events Permissions */
+					(ServerPerms || MembershipPerms || TextPerms || VCPerms) && EventPerms && "──────────────",
+					EventPerms && "Manage Events"
+				].filter(n => n).join("\n");
 			}
 			
 			getUserType (user, channelId) {
@@ -418,7 +482,31 @@ module.exports = (_ => {
 				else if (this.settings.tagTypes.forumCreators && channel.ownerId == user.id && BDFDB.ChannelUtils.isForumPost(channel)) return userTypes.FORUM_CREATOR;
 				else if (this.settings.tagTypes.threadCreators && channel.ownerId == user.id && BDFDB.ChannelUtils.isThread(channel) && !BDFDB.ChannelUtils.isForumPost(channel)) return userTypes.THREAD_CREATOR;
 				else if (this.settings.tagTypes.admins && BDFDB.UserUtils.can("ADMINISTRATOR", user.id)) return userTypes.ADMIN;
-				else if (this.settings.tagTypes.managementG && BDFDB.UserUtils.can("MANAGE_GUILD", user.id) || this.settings.tagTypes.managementC && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) || this.settings.tagTypes.managementR && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) || this.settings.tagTypes.managementU && (BDFDB.UserUtils.can("BAN_MEMBERS", user.id) || BDFDB.UserUtils.can("KICK_MEMBERS", user.id)) || this.settings.tagTypes.managementM && BDFDB.UserUtils.can("MANAGE_MESSAGES", user.id)) return userTypes.MANAGEMENT;
+				else if (
+				/* Server Permissions */
+				this.settings.tagTypes.managementChannels && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) ||
+				this.settings.tagTypes.managementRoles && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) ||
+				this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) ||
+				this.settings.tagTypes.managementViewAuditLog && BDFDB.UserUtils.can("VIEW_AUDIT_LOG", user.id) ||
+				this.settings.tagTypes.managementInsights && BDFDB.UserUtils.can("VIEW_GUILD_ANALYTICS", user.id) ||
+				this.settings.tagTypes.managementWebhooks && BDFDB.UserUtils.can("MANAGE_WEBHOOKS", user.id) ||
+				this.settings.tagTypes.managementServer && BDFDB.UserUtils.can("MANAGE_GUILD", user.id) ||
+				/* Membership Permissions */
+				this.settings.tagTypes.managementModerate && BDFDB.UserUtils.can("MODERATE_MEMBERS", user.id) ||
+				this.settings.tagTypes.managementNicknames && BDFDB.UserUtils.can("MANAGE_NICKNAMES", user.id) ||
+				this.settings.tagTypes.managementKick && BDFDB.UserUtils.can("KICK_MEMBERS", user.id) ||
+				this.settings.tagTypes.managementBan && BDFDB.UserUtils.can("BAN_MEMBERS", user.id) ||
+				/* Text Channel Permissions */
+				this.settings.tagTypes.managementMention && BDFDB.UserUtils.can("MENTION_EVERYONE", user.id) ||
+				this.settings.tagTypes.managementMessages && BDFDB.UserUtils.can("MANAGE_MESSAGES", user.id) ||
+				this.settings.tagTypes.managementThreads && BDFDB.UserUtils.can("MANAGE_THREADS", user.id) ||
+				/* VC Permissions */
+				this.settings.tagTypes.managementMute && BDFDB.UserUtils.can("MUTE_MEMBERS", user.id) ||
+				this.settings.tagTypes.managementDeafen && BDFDB.UserUtils.can("DEAFEN_MEMBERS", user.id) ||
+				this.settings.tagTypes.managementMove && BDFDB.UserUtils.can("MOVE_MEMBERS", user.id) ||
+				/* Events Permissions */
+				this.settings.tagTypes.managementEvents && BDFDB.UserUtils.can("MANAGE_EVENTS", user.id)
+				) return userTypes.MANAGEMENT;
 				return userTypes.NONE;
 			}
 
