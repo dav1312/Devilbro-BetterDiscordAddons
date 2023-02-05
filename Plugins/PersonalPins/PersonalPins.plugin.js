@@ -408,14 +408,6 @@ module.exports = (_ => {
 			
 			onStart () {
 				notes = BDFDB.DataUtils.load(this, "notes");
-				
-				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.DispatchApiUtils, "dispatch", {after: e => {
-					if (BDFDB.ObjectUtils.is(e.methodArguments[0]) && e.methodArguments[0].type == "MESSAGE_DELETE") {
-						let note = this.getNoteData({id: e.methodArguments[0].id, channel_id: e.methodArguments[0].channelId});
-						if (note) this.removeNoteData(note, true);
-					}
-				}});
-				
 				BDFDB.DiscordUtils.rerenderAll();
 			}
 			
