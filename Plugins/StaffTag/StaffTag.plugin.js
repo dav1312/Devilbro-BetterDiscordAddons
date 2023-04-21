@@ -183,7 +183,7 @@ module.exports = (_ => {
 						margin-left: 0;
 						margin-right: 4px;
 					}
-					.tooltipContent-Nejnvh {
+					.tooltipContent-38tm3I {
 						white-space: break-spaces !important
 					}
 					.headerText-1-WmDq .botText-1fD6Qk {
@@ -444,29 +444,29 @@ module.exports = (_ => {
 					/* Server Permissions */
 					this.settings.tagTypes.managementChannels && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) && "Manage Channels",
 					this.settings.tagTypes.managementRoles && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) && "Manage Roles",
-					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) && "Manage Emojis",
+					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) && "Manage Expressions",
 					this.settings.tagTypes.managementViewAuditLog && BDFDB.UserUtils.can("VIEW_AUDIT_LOG", user.id) && "View Audit Log",
 					this.settings.tagTypes.managementInsights && BDFDB.UserUtils.can("VIEW_GUILD_ANALYTICS", user.id) && "View Server Insights",
 					this.settings.tagTypes.managementWebhooks && BDFDB.UserUtils.can("MANAGE_WEBHOOKS", user.id) && "Manage Webhooks",
 					this.settings.tagTypes.managementServer && BDFDB.UserUtils.can("MANAGE_GUILD", user.id) && "Manage Server",
 					/* Membership Permissions */
-					ServerPerms && MembershipPerms && "──────────────",
+					ServerPerms && MembershipPerms && "───────────────",
 					this.settings.tagTypes.managementModerate && BDFDB.UserUtils.can("MODERATE_MEMBERS", user.id) && "Moderate Members",
 					this.settings.tagTypes.managementNicknames && BDFDB.UserUtils.can("MANAGE_NICKNAMES", user.id) && "Manage Nicknames",
 					this.settings.tagTypes.managementKick && BDFDB.UserUtils.can("KICK_MEMBERS", user.id) && "Kick Members",
 					this.settings.tagTypes.managementBan && BDFDB.UserUtils.can("BAN_MEMBERS", user.id) && "Ban Members",
 					/* Text Channel Permissions */
-					(ServerPerms || MembershipPerms) && TextPerms && "──────────────",
+					(ServerPerms || MembershipPerms) && TextPerms && "───────────────",
 					this.settings.tagTypes.managementMention && BDFDB.UserUtils.can("MENTION_EVERYONE", user.id) && "Mention @everyone",
 					this.settings.tagTypes.managementMessages && BDFDB.UserUtils.can("MANAGE_MESSAGES", user.id) && "Manage Messages",
 					this.settings.tagTypes.managementThreads && BDFDB.UserUtils.can("MANAGE_THREADS", user.id) && "Manage Threads",
 					/* VC Permissions */
-					(ServerPerms || MembershipPerms || TextPerms) && VCPerms && "──────────────",
+					(ServerPerms || MembershipPerms || TextPerms) && VCPerms && "───────────────",
 					this.settings.tagTypes.managementMute && BDFDB.UserUtils.can("MUTE_MEMBERS", user.id) && "Mute Members",
 					this.settings.tagTypes.managementDeafen && BDFDB.UserUtils.can("DEAFEN_MEMBERS", user.id) && "Deafen Members",
 					this.settings.tagTypes.managementMove && BDFDB.UserUtils.can("MOVE_MEMBERS", user.id) && "Move Members",
 					/* Events Permissions */
-					(ServerPerms || MembershipPerms || TextPerms || VCPerms) && EventPerms && "──────────────",
+					(ServerPerms || MembershipPerms || TextPerms || VCPerms) && EventPerms && "───────────────",
 					EventPerms && "Manage Events"
 				].filter(n => n).join("\n");
 			}
