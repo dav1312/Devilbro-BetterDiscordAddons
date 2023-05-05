@@ -415,6 +415,7 @@ module.exports = (_ => {
 				const ServerPerms = (
 					this.settings.tagTypes.managementChannels && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) ||
 					this.settings.tagTypes.managementRoles && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) ||
+					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("CREATE_GUILD_EXPRESSIONS", user.id) ||
 					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) ||
 					this.settings.tagTypes.managementViewAuditLog && BDFDB.UserUtils.can("VIEW_AUDIT_LOG", user.id) ||
 					this.settings.tagTypes.managementInsights && BDFDB.UserUtils.can("VIEW_GUILD_ANALYTICS", user.id) ||
@@ -444,6 +445,7 @@ module.exports = (_ => {
 					/* Server Permissions */
 					this.settings.tagTypes.managementChannels && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) && "Manage Channels",
 					this.settings.tagTypes.managementRoles && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) && "Manage Roles",
+					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("CREATE_GUILD_EXPRESSIONS", user.id) && "Create Expressions",
 					this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) && "Manage Expressions",
 					this.settings.tagTypes.managementViewAuditLog && BDFDB.UserUtils.can("VIEW_AUDIT_LOG", user.id) && "View Audit Log",
 					this.settings.tagTypes.managementInsights && BDFDB.UserUtils.can("VIEW_GUILD_ANALYTICS", user.id) && "View Server Insights",
@@ -486,6 +488,7 @@ module.exports = (_ => {
 				/* Server Permissions */
 				this.settings.tagTypes.managementChannels && BDFDB.UserUtils.can("MANAGE_CHANNELS", user.id) ||
 				this.settings.tagTypes.managementRoles && BDFDB.UserUtils.can("MANAGE_ROLES", user.id) ||
+				this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("CREATE_GUILD_EXPRESSIONS", user.id) ||
 				this.settings.tagTypes.managementEmojisStickers && BDFDB.UserUtils.can("MANAGE_GUILD_EXPRESSIONS", user.id) ||
 				this.settings.tagTypes.managementViewAuditLog && BDFDB.UserUtils.can("VIEW_AUDIT_LOG", user.id) ||
 				this.settings.tagTypes.managementInsights && BDFDB.UserUtils.can("VIEW_GUILD_ANALYTICS", user.id) ||
